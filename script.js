@@ -5,6 +5,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let doodlerLeftSpace = 50
     let doodlerBottomSpace = 150
     let isGameOver = false
+    let platformCount = 5
+    let platforms = []
 
 
     // creates doodle
@@ -16,10 +18,35 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     createDoodler()
 
+    class Platform{
+        constructor(platformBottom){
+            this.bottom = platformBottom
+            this.left = Math.random() * 315
+            this.visual = document.createElement('div')
+
+            const visual = this.visual
+            visual.classList.add('platform')
+            visual.style.left = this.left + 'px'
+            visual.style.bottom = this.bottom + 'px'
+            grid.appendChild(visual)
+        }
+    }
+    // creates platforms
+    function createPlatform() {
+        for (let i = 0; i < platformCount; i++){
+            let platformGap = 600 / platformCount
+            let platformBottom = 100 + i * platformGap
+            let newplatform = new Platform(platformBottom)
+            platforms.push(newplatform)
+            console.log(platforms);
+        }
+    }
+
     // start game function
     function start() {
         if (!isGameOver) {
             createDoodler()
+            createPlatform()
         }
     }
     start()
