@@ -42,11 +42,21 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    function movePlatforms() {
+        if(doodlerBottomSpace > 200) {
+            platforms.forEach(platform => {
+                platform.bottom -=4
+                let visual = platform.visual
+                visual.style.bottom = platform.bottom + 'px'
+            })
+        }
+    }
     // start game function
     function start() {
         if (!isGameOver) {
             createDoodler()
             createPlatform()
+            setInterval(movePlatforms,30)
         }
     }
     start()
