@@ -7,12 +7,15 @@ document.addEventListener('DOMContentLoaded', () => {
     let isGameOver = false
     let platformCount = 5
     let platforms = []
+    let upTimerId 
+    let downTimerId
 
 
     // creates doodle
     function createDoodler() {
         grid.appendChild(doodler)
         doodler.classList.add('doodler')
+        doodlerLeftSpace = platforms[0].left
         doodler.style.left = doodlerLeftSpace + 'px'
         doodler.style.bottom = doodlerBottomSpace + 'px'
     }
@@ -38,10 +41,9 @@ document.addEventListener('DOMContentLoaded', () => {
             let platformBottom = 100 + i * platformGap
             let newplatform = new Platform(platformBottom)
             platforms.push(newplatform)
-            console.log(platforms);
         }
     }
-
+// moves platforms down when doodle moves 200px up
     function movePlatforms() {
         if(doodlerBottomSpace > 200) {
             platforms.forEach(platform => {
@@ -51,13 +53,43 @@ document.addEventListener('DOMContentLoaded', () => {
             })
         }
     }
+
+    function jump(){
+        clearInterval(downTimerId)
+        upTimerId = setInterval( function (){
+            doodlerBottomSpace += 20
+            doodler.style.bottom = doodlerBottomSpace + 'px'
+            if (doodlerBottomSpace> 350) {
+                fall()
+            }
+        },30)
+    }
+
+    function fall() {
+        clearInterval(upTimerId)
+        downTimerId = setInterval( function(){
+            doodlerBottomSpace -= 5
+            doodler.style.bottom = doodlerBottomSpace + 'px'
+            if (doodlerBottomSpace <= 0) {
+                gameOver()
+            }
+        },30)
+    }
     // start game function
     function start() {
         if (!isGameOver) {
-            createDoodler()
             createPlatform()
+            createDoodler()
             setInterval(movePlatforms,30)
+            jump()
         }
+    }
+
+    function gameOver() {
+        console.log("gameover");
+        isGameOver = true
+        clearInterval(upTimerId)
+        clearInterval(downTimerId)
     }
     start()
 })
